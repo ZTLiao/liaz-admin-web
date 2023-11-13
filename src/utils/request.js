@@ -6,13 +6,7 @@ import { alertMsg } from "@/utils/system-helper";
 
 const service = axios.create();
 
-var baseURL = '';
-
-if (!process.env.VUE_APP_DEBUG_MODE) {
-    baseURL = process.env.VUE_APP_API_BASE_URL;
-}
-
-service.defaults.baseURL = baseURL;
+service.defaults.baseURL = !process.env.VUE_APP_DEBUG_MODE ? process.env.VUE_APP_API_BASE_URL : '';
 
 service.interceptors.request.use(config => {
     if (global.EXCLUDES.filter(v => config.url == v).length == 0) {

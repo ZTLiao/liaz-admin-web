@@ -10,7 +10,6 @@
 import HeaderView from "@/components/header/index.vue";
 import MaintainerView from "@/components/maintainer/index.vue";
 import FooterView from "@/components/footer/index.vue";
-import '@/utils/ajaxfileupload';
 
 export default {
   name: 'HomeView',

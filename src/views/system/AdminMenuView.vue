@@ -28,38 +28,38 @@
                     <h4 class="modal-title" id="modalLabel">菜单信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="menuForm">
+                    <form class="form-horizontal">
                         <input type="hidden" name="menuId" v-model="adminMenu.menuId" />
                         <div class="form-group">
-                            <label for="name" class="col-sm-2 control-label">名称:</label>
-                            <div class="col-sm-10">
+                            <label for="name" class="col-sm-3 control-label">名称:</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control validate[required]" name="name" id="name"
                                     v-model="adminMenu.name" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="path" class="col-sm-2 control-label">路径:</label>
-                            <div class="col-sm-10">
+                            <label for="path" class="col-sm-3 control-label">路径:</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control validate[required]" name="path" id="path"
                                     v-model="adminMenu.path" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="icon" class="col-sm-2 control-label">图标:</label>
-                            <div class="col-sm-10">
+                            <label for="icon" class="col-sm-3 control-label">图标:</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" name="icon" id="icon" v-model="adminMenu.icon" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="showOrder" class="col-sm-2 control-label">排序:</label>
-                            <div class="col-sm-10">
+                            <label for="showOrder" class="col-sm-3 control-label">排序:</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control validate[required]" name="showOrder" id="showOrder"
                                     v-model="adminMenu.showOrder">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="status" class="col-sm-2 control-label">状态:</label>
-                            <div class="col-sm-10">
+                            <label for="status" class="col-sm-3 control-label">状态:</label>
+                            <div class="col-sm-8">
                                 <select name="status" id="status" data-btn-class="btn-warning">
                                     <option value="1">有效</option>
                                     <option value="0">无效</option>
@@ -67,15 +67,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="parentId" class="col-sm-2 control-label">父级:</label>
-                            <div class="col-sm-10">
+                            <label for="parentId" class="col-sm-3 control-label">父级:</label>
+                            <div class="col-sm-8">
                                 <select name="parentId" id="parentId" data-btn-class="btn-warning">
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="description" class="col-sm-2 control-label">描述:</label>
-                            <div class="col-sm-10">
+                            <label for="description" class="col-sm-3 control-label">描述:</label>
+                            <div class="col-sm-8">
                                 <textarea class="form-control" name="description" id="description" v-model="adminMenu.description">
                                 </textarea>
                             </div>

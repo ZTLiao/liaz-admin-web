@@ -29,7 +29,7 @@
                     <h4 class="modal-title" id="modalLabel">用户信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" id="userForm">
+                    <form class="form-horizontal">
                         <input type="hidden" name="adminId" v-model="adminUser.adminId" />
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">
@@ -52,11 +52,16 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">头像</label>
                             <div class="col-sm-8">
-                                <img src="" id="avatarImg" style="width:120px;" />
-                                <input type="file" id="avatarUploadFile" name="avatarUploadFile">
-                                <button class="btn btn-success" type="button" id="avatarUploadBtn">上传</button>
-                                <input type="hidden" name="avatar" class="form-control validate[required]"
-                                    v-model="adminUser.avatar" />
+                                <input type="hidden" class="form-control" name="avatar" v-model="adminUser.avatar" />
+                                <img :src="adminUser.avatar" style="width:120px;"/>
+                                <input type="file" class="form-control" id="file" name="file">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-8">
+                                <button class="btn btn-success col-sm-4" type="button" id="uploadBtn">上传</button>
+                                <span class="btn col-sm-4" id="uploadInfo" style="color:red;"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -175,6 +180,8 @@ import ComboboxHelper from '@/utils/bootstrap-combobox-helper';
 import { getAdminUserList, saveAdminUser, updateAdminUser, delAdminUser, thawAdminUser } from '@/api/system/user';
 import { getAdminUserRole, saveAdminUserRole } from '@/api/system/userRole';
 import { getAdminRoleMenu } from '@/api/system/roleMenu';
+import { uploadFile } from '@/api/common/upload';
+
 import { alertMsg } from '@/utils/system-helper';
 import avatar from '@/assets/images/man.jpg';
 
@@ -260,6 +267,11 @@ export default {
                 $('#addBtn').click(function () {
                     $this.add();
                 });
+                $('#uploadBtn').click(function () {
+                    uploadFile('file').then(res => {
+                        console.log(res);
+                    });
+                });
                 $('#table').on('click', '.opt-edit', function () {
                     $this.edit(this);
                 });
@@ -333,6 +345,11 @@ export default {
             this.show();
         },
         show() {
+            let uploadInfo = '未上传文件';
+            if (this.adminUser.avatar) {
+                uploadInfo = '已上传';
+            }
+            $('#uploadInfo').html(uploadInfo);
             ComboboxHelper.build('#status', this.adminUser.status);
             $('#userModal').modal('show');
         },
