@@ -2531,9 +2531,16 @@
 
         BootstrapTable.prototype.destroy = function () {
             let bootstrapTable = $('div .bootstrap-table');
-            if (bootstrapTable.length > 1) {
-                this.$container = $(bootstrapTable[0]);
-                this.options.toolbar = $('div.fixed-table-toolbar > div.bars.pull-left').html();
+            if (bootstrapTable) {
+                let $this = this;
+                let tables = bootstrapTable.filter(i => {
+                    let $container = $(bootstrapTable[i]);
+                    return ($container && $container.html().indexOf('"' +$this.$el[0].id + '"') != -1);
+                });
+                if (tables.length > 1) {
+                    this.$container = $(tables[0]);
+                    this.options.toolbar = $('div.fixed-table-toolbar > div.bars.pull-left').html();
+                }
             }
             this.$el.insertBefore(this.$container);
                 $(this.options.toolbar).insertBefore(this.$el);

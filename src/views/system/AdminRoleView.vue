@@ -34,7 +34,7 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">名称:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control  validate[required]" name="name"
+                                <input type="text" class="form-control  validate[required]" name="name" id="name"
                                     v-model="adminRole.name" />
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                     <form class="form-horizontal">
                         <input type="hidden" name="roleId" v-model="adminRole.roleId" />
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">名称:</label>
+                            <label class="col-sm-3 control-label">名称:</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" name="name" disabled="disabled"
                                     v-model="adminRole.name">

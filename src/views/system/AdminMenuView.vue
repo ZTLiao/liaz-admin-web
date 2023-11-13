@@ -33,27 +33,27 @@
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">名称:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control validate[required]" name="name"
+                                <input type="text" class="form-control validate[required]" name="name" id="name"
                                     v-model="adminMenu.name" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="path" class="col-sm-2 control-label">路径:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control validate[required]" name="path"
+                                <input type="text" class="form-control validate[required]" name="path" id="path"
                                     v-model="adminMenu.path" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="icon" class="col-sm-2 control-label">图标:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="icon" v-model="adminMenu.icon" />
+                                <input type="text" class="form-control" name="icon" id="icon" v-model="adminMenu.icon" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="showOrder" class="col-sm-2 control-label">排序:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control validate[required]" name="showOrder"
+                                <input type="text" class="form-control validate[required]" name="showOrder" id="showOrder"
                                     v-model="adminMenu.showOrder">
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                         <div class="form-group">
                             <label for="description" class="col-sm-2 control-label">描述:</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" name="description" v-model="adminMenu.description">
+                                <textarea class="form-control" name="description" id="description" v-model="adminMenu.description">
                                 </textarea>
                             </div>
                         </div>

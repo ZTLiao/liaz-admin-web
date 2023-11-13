@@ -43,3 +43,14 @@ export const delAdminUser = id => {
         method: 'delete'
     });  
 }
+
+export const thawAdminUser = id => {
+    return request({
+        url: '/admin/user/thaw',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        method: 'put',
+        data: {
+            adminId: id
+        }
+    });
+}

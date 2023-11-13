@@ -29,14 +29,15 @@
                     <h4 class="modal-title" id="modalLabel">用户信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
-                        <input type="hidden" name="adminId" v-model="adminUser.adminId"/>
+                    <form class="form-horizontal" id="userForm">
+                        <input type="hidden" name="adminId" v-model="adminUser.adminId" />
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">
                                 <span style="color: red; ">*</span>姓名:
                             </label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="name" v-model="adminUser.name"/>
+                                <input type="text" class="form-control validate[required]" name="name" id="name"
+                                    v-model="adminUser.name" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -44,22 +45,24 @@
                                 <span style="color: red; ">*</span>账号:
                             </label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="username" v-model="adminUser.username"/>
+                                <input type="text" class="form-control validate[required]" name="username" id="username"
+                                    v-model="adminUser.username" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">头像</label>
                             <div class="col-sm-8">
-                                <img src="" id="avatarImg" style="width:120px;"/>
+                                <img src="" id="avatarImg" style="width:120px;" />
                                 <input type="file" id="avatarUploadFile" name="avatarUploadFile">
                                 <button class="btn btn-success" type="button" id="avatarUploadBtn">上传</button>
-                                <input type="hidden" name="avatar" class="form-control validate[required]" v-model="adminUser.avatar"/>
+                                <input type="hidden" name="avatar" class="form-control validate[required]"
+                                    v-model="adminUser.avatar" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="email" class="col-sm-3 control-label">邮箱:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="email" v-model="adminUser.email"/>
+                                <input type="text" class="form-control" name="email" id="email" v-model="adminUser.email" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -67,7 +70,8 @@
                                 <span style="color: red; ">*</span>手机号码:
                             </label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="phone" v-model="adminUser.phone">
+                                <input type="text" class="form-control validate[required]" name="phone" id="phone"
+                                    v-model="adminUser.phone">
                             </div>
                         </div>
                         <div class="form-group" id="passwordDiv">
@@ -75,7 +79,8 @@
                                 <span style="color: red; ">*</span>密码:
                             </label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="password" v-model="adminUser.password">
+                                <input type="text" class="form-control validate[required]" name="password" id="password"
+                                    v-model="adminUser.password">
                             </div>
                         </div>
                         <div class="form-group">
@@ -90,7 +95,8 @@
                         <div class="form-group">
                             <label for="introduction" class="col-sm-3 control-label">描述:</label>
                             <div class="col-sm-8">
-                                <textarea class="form-control" name="introduction" v-model="adminUser.introduction">
+                                <textarea class="form-control" name="introduction" id="introduction"
+                                    v-model="adminUser.introduction">
                                 </textarea>
                             </div>
                         </div>
@@ -114,11 +120,12 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <input type="hidden" name="adminId" v-model="adminUser.adminId"/>
+                        <input type="hidden" name="adminId" v-model="adminUser.adminId" />
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">姓名:</label>
+                            <label for="adminUserName" class="col-sm-3 control-label">姓名:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="name" disabled="disabled" v-model="adminUser.name"/>
+                                <input type="text" class="form-control" name="adminUserName" id="adminUserName"
+                                    disabled="disabled" v-model="adminUser.name" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -146,19 +153,16 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <input type="hidden" name="roleId" id="roleId"/>
+                        <input type="hidden" name="roleIds" id="roleIds" />
                         <div class="form-group">
-                            <label for="roleName" class="col-sm-3 control-label">名称:</label>
+                            <label for="roleNames" class="col-sm-3 control-label">名称:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="roleName" disabled="disabled" id="roleName"/>
+                                <input type="text" class="form-control" name="roleNames" disabled="disabled"
+                                    id="roleNames" />
                             </div>
                         </div>
                         <div id="menuTree"></div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="roleMenuSave">保存</button>
                 </div>
             </div>
         </div>
@@ -168,8 +172,10 @@
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
 import ComboboxHelper from '@/utils/bootstrap-combobox-helper';
-import { getAdminUserList, saveAdminUser, updateAdminUser, delAdminUser } from '@/api/system/user';
+import { getAdminUserList, saveAdminUser, updateAdminUser, delAdminUser, thawAdminUser } from '@/api/system/user';
+import { getAdminUserRole, saveAdminUserRole } from '@/api/system/userRole';
 import { getAdminRoleMenu } from '@/api/system/roleMenu';
+import { alertMsg } from '@/utils/system-helper';
 import avatar from '@/assets/images/man.jpg';
 
 export default {
@@ -261,16 +267,19 @@ export default {
                     $this.getUserRole(this);
                 });
                 $('#table').on('click', '.opt-auth', function () {
-
+                    $this.authRoleMenu(this);
                 });
                 $('#table').on('click', '.opt-thaw', function () {
-
+                    $this.thawUser(this);
                 });
                 $('#table').on('click', '.opt-del', function () {
                     $this.del(this);
                 });
                 $('#save').click(function () {
                     $this.save();
+                });
+                $('#roleSave').click(function () {
+                    $this.saveUserRole();
                 });
             });
         },
@@ -315,6 +324,7 @@ export default {
             this.adminUser.adminId = record.adminId;
             this.adminUser.name = record.name;
             this.adminUser.username = record.username;
+            this.adminUser.password = '';
             this.adminUser.phone = record.phone;
             this.adminUser.avatar = record.avatar;
             this.adminUser.email = record.email;
@@ -328,7 +338,9 @@ export default {
         },
         save() {
             let data = this.adminUser;
-            data.password = $.md5(data.password);
+            if (data.password) {
+                data.password = $.md5(data.password);
+            }
             data.status = ComboboxHelper.getSelected('#status');
             (data.adminId ? updateAdminUser(data) : saveAdminUser(data)).then(res => {
                 console.log(res);
@@ -349,25 +361,94 @@ export default {
                 this.getUser();
             });
         },
-        getUserRole(obj) {
+        thawUser(obj) {
             const index = $(obj).data('index');
             const record = TableHelper.getData('#table')[index];
             const adminId = record.adminId;
+            thawAdminUser(adminId).then(res => {
+                alertMsg('解冻成功');
+                this.getUser();
+            });
         },
-        authRoleMenu(obj) {
+        getUserRole(obj) {
             const index = $(obj).data('index');
             const record = TableHelper.getData('#table')[index];
-            const roleId = null;
-            //TODO
-            getAdminRoleMenu(roleId).then(res => {
-                let menus = res.data;
-                if (!menus || menus.length == 0) {
-                    return;
+            this.adminUser.adminId = record.adminId;
+            this.adminUser.name = record.name;
+            const adminId = record.adminId;
+            getAdminUserRole(adminId).then(res => {
+                let adminRoles = res.data;
+                let html = '';
+                for (let i = 0, len = adminRoles.length; i < len; i++) {
+                    let adminRole = adminRoles[i];
+                    html += '<input type="checkbox" name="roles" value="' + adminRole.roleId + '" ' + (adminRole.checked ? 'checked' : '') + '/>' + adminRole.roleName + '&nbsp;&nbsp;&nbsp;';
                 }
-                this.menuTree(menus);
-                $('#roleId').val();
-                $('#roleName').val();
-                $('#roleMenuModal').modal('show');
+                $('#roles').html(html);
+                $("#roleModal").modal('show');
+            });
+        },
+        saveUserRole() {
+            const adminId = this.adminUser.adminId;
+            const roleArray = $("input:checkbox[name='roles']:checked").serializeArray();
+            let roleIds = [];
+            for (let i = 0, len = roleArray.length; i < len; i++) {
+                console.log(roleArray[i]);
+                roleIds[i] = roleArray[i].value;
+            }
+            saveAdminUserRole({
+                adminId: adminId,
+                roleIds: roleIds.join(',')
+            });
+            $("#roleModal").modal('hide');
+        },
+        async authRoleMenu(obj) {
+            const index = $(obj).data('index');
+            const record = TableHelper.getData('#table')[index];
+            const adminId = record.adminId;
+            getAdminUserRole(adminId).then(res => {
+                let adminRoles = res.data;
+                let promiseArray = [];
+                for (let i = 0, len = adminRoles.length; i < len; i++) {
+                    let adminRole = adminRoles[i];
+                    promiseArray[i] = new Promise((resolve, reject) => {
+                        getAdminRoleMenu(adminRole.roleId).then(res => {
+                            resolve(res.data);
+                        }).catch(() => {
+                            reject();
+                        });
+                    });
+                }
+                Promise.all(promiseArray).then(item => {
+                    let menus = [];
+                    for (let i = 0; i < item.length; i++) {
+                        let adminMenus = item[i];
+                        if (menus.length == 0) {
+                            for (let j = 0; j < adminMenus.length; j++) {
+                                menus[j] = adminMenus[j];
+                            }
+                        } else {
+                            for (let j = 0; j < menus.length; j++) {
+                                let parentMenu = menus[j];
+                                let adminMenu = adminMenus.filter(v => v.menuId == parentMenu.menuId)[0];
+                                if (adminMenu.checked) {
+                                    parentMenu.checked = true;
+                                }
+                                let childs = parentMenu.childs;
+                                for (let k = 0; k < childs.length; k++) {
+                                    let childMenu = childs[k];
+                                    adminMenu = adminMenus.filter(v => v.menuId == parentMenu.menuId)[0];
+                                    if (adminMenu.checked) {
+                                        childMenu.checked = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    this.menuTree(menus);
+                    $('#roleIds').val(adminRoles.map(v => v.roleId).join(','));
+                    $('#roleNames').val(adminRoles.map(v => v.roleName).join(','));
+                    $('#roleMenuModal').modal('show');
+                });
             });
         },
         menuTree(menus) {
