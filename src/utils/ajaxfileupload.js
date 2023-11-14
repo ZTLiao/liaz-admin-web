@@ -39,12 +39,12 @@ jQuery.extend({
             form.remove();
         }
         form = $('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');
-        var oldElement = $('#' + fileElementId);    
-        var newElement = $(oldElement).clone(true).val("");    
+        var oldElement = $('#' + fileElementId);
+        var newElement = $(oldElement).clone(true).val("");
         //须要复制元素的全部事件处理。  
-        $(oldElement).attr('id', fileId);    
-        $(oldElement).before(newElement);    
-        $(oldElement).appendTo(form);  
+        $(oldElement).attr('id', fileId);
+        $(oldElement).before(newElement);
+        $(oldElement).appendTo(form);
         //set attributes
         $(form).css('position', 'absolute');
         $(form).css('top', '-1200px');
@@ -145,7 +145,20 @@ jQuery.extend({
             } else {
                 form.enctype = 'multipart/form-data';
             }
-            $(form).submit();
+            let submitType = s.submitType;
+            let $form = $(form);
+            if (!submitType || submitType == 'form') {
+                $form.submit();
+            } else if (submitType == 'ajax') {
+                $form.ajaxSubmit({
+                    success: function (data, status) {
+                        s.success(data, status);
+                    },
+                    error: function (err) {
+                        jQuery.handleError(s, xml, null, err);
+                    }
+                });
+            }
         } catch (e) {
             jQuery.handleError(s, xml, null, e);
         }

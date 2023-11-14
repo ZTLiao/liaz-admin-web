@@ -1,9 +1,9 @@
 export default {
-    KEY: "liaz",
+    KEY: 'liaz',
     EXCLUDES: [
-        "/admin/login",
+        '/admin/login',
     ],
-    AUTHORIZATION: "Authorization",
+    AUTHORIZATION: 'Authorization',
     HTTP_STATUS: {
         OK: 200,
         UNAUTHORIZED: 401,

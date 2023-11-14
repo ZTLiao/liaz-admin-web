@@ -268,7 +268,11 @@ export default {
                     $this.add();
                 });
                 $('#uploadBtn').click(function () {
-                    uploadFile('file').then(res => {
+                    uploadFile({
+                        id: 'file',
+                        bucketName: 'userAvatar'
+                    }).then(res => {
+                        debugger;
                         console.log(res);
                     });
                 });
