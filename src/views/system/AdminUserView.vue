@@ -184,6 +184,7 @@ import { uploadFile } from '@/api/common/upload';
 
 import { alertMsg } from '@/utils/system-helper';
 import avatar from '@/assets/images/man.jpg';
+import global from '@/constants/global';
 
 export default {
     name: 'AdminUserView',
@@ -270,9 +271,8 @@ export default {
                 $('#uploadBtn').click(function () {
                     uploadFile({
                         id: 'file',
-                        bucketName: 'userAvatar'
+                        bucketName: global.BUCKET.AVATAR
                     }).then(res => {
-                        debugger;
                         console.log(res);
                     });
                 });

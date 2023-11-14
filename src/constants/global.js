@@ -9,4 +9,7 @@ export default {
         UNAUTHORIZED: 401,
         SERVER_ERROR: 500,
     },
+    BUCKET: {
+        AVATAR: 'avatar',
+    }
 };
