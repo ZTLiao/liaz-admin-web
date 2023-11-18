@@ -200,7 +200,8 @@ export default {
                     align: 'center',
                     width: '5%',
                     formatter: function (val, row, index) {
-                        return '<img src="' + (val ? getFileUrl(val) : avatar) + '" width="70" height="60"/>';
+                        let value = (val ? getFileUrl(val) : avatar);
+                        return '<img src="' + value + '" width="70" height="60"/>';
                     }
                 },
                 {

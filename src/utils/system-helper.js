@@ -1,5 +1,4 @@
-import store from '@/store';
-import global from '@/constants/global';
+import { getStore } from '@/utils/store';
 
 export function showLoading() {
     $(".loadingGif").css('top', window.innerHeight / 2);
@@ -46,15 +45,6 @@ export function getUrlParam(name) {
 }
 
 //获取链接
-export async function getFileUrl(uri) {
-    let perfix = '';
-    let sysConfs = store.getters.sysConfs;
-    if (sysConfs || sysConfs.length == 0) {
-        sysConfs = await store.dispatch('getSysConfs');
-    }
-    let sysConf = sysConfs.filter(v => v.confKey == global.SYS_CONF.FILE_URL)[0];
-    if (sysConf) {
-        perfix = sysConf.confValue;
-    }
-    return perfix + uri;
+export function getFileUrl(uri) { 
+    return getStore({name: 'file_url' }) + uri;
 }
