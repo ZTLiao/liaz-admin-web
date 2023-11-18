@@ -25,36 +25,40 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="modalLabel">菜单信息</h4>
+                    <h4 class="modal-title" id="modalLabel">配置信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <input type="hidden" name="menuId" v-model="adminMenu.menuId" />
+                        <input type="hidden" name="menuId" v-model="sysConf.confId" />
                         <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">名称:</label>
+                            <label for="confKey" class="col-sm-3 control-label">配置KEY:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="name" id="name"
-                                    v-model="adminMenu.name" />
+                                <input type="text" class="form-control validate[required]" name="confKey" id="confKey"
+                                    v-model="sysConf.confKey" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="path" class="col-sm-3 control-label">路径:</label>
+                            <label for="confName" class="col-sm-3 control-label">配置名称:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="path" id="path"
-                                    v-model="adminMenu.path" />
+                                <input type="text" class="form-control validate[required]" name="confName" id="confName"
+                                    v-model="sysConf.confName" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="icon" class="col-sm-3 control-label">图标:</label>
+                            <label for="confKind" class="col-sm-3 control-label">配置类型:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" name="icon" id="icon" v-model="adminMenu.icon" />
+                                <select name="confKind" id="confKind" data-btn-class="btn-warning">
+                                    <option value="0">CUSTOM</option>
+                                    <option value="1">TEXT</option>
+                                    <option value="2">BOOL</option>
+                                    <option value="3">JSON</option>
+                                </select> 
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="showOrder" class="col-sm-3 control-label">排序:</label>
+                            <label for="confValue" class="col-sm-3 control-label">配置项:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="showOrder" id="showOrder"
-                                    v-model="adminMenu.showOrder">
+                                <input type="text" class="form-control" name="confValue" id="confValue" v-model="sysConf.confValue" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -67,16 +71,18 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="parentId" class="col-sm-3 control-label">父级:</label>
-                            <div class="col-sm-8">
-                                <select name="parentId" id="parentId" data-btn-class="btn-warning">
-                                </select>
+                            <label for="confType" class="col-sm-3 control-label">属性特征:</label>
+                            <div class="col-sm-8" id="confType">
+                                <input type="checkbox" name="confType" value="1" />&nbsp;&nbsp;COMMON<br/>
+                                <input type="checkbox" name="confType" value="2" />&nbsp;&nbsp;SERVER<br/>
+                                <input type="checkbox" name="confType" value="4" />&nbsp;&nbsp;CLIENT<br/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="description" class="col-sm-3 control-label">描述:</label>
                             <div class="col-sm-8">
-                                <textarea class="form-control" name="description" id="description" v-model="adminMenu.description">
+                                <textarea class="form-control" name="description" id="description"
+                                    v-model="sysConf.description">
                                 </textarea>
                             </div>
                         </div>
@@ -94,61 +100,57 @@
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
 import ComboboxHelper from '@/utils/bootstrap-combobox-helper';
-import { getAdminMenuList, saveAdminMenu, updateAdminMenu, delAdminMenu } from '@/api/system/menu';
+import { getAdminSysConf, saveAdminSysConf, updateAdminSysConf, delAdminSysConf } from '@/api/system/sysConf';
 import { alertMsg } from '@/utils/system-helper';
 
 export default {
-    name: 'AdminMenuView',
+    name: 'AdminSysConfView',
     data() {
         return {
             columns: [
-                { field: 'menuId', title: '菜单ID', align: 'center', width: '5%' },
-                { field: 'name', title: '名称', align: 'center', width: '15%' },
-                { field: 'parentId', title: '父级ID', align: 'center', visible: false },
-                {
-                    field: 'parentName',
-                    title: '父级菜单',
-                    align: 'center',
-                    width: '15%',
+                { field: 'confId', title: '配置ID', align: 'center', width: '5%' },
+                { field: 'confKey', title: '配置KEY', align: 'center', width: '5%' },
+                { field: 'confName', title: '配置名称', align: 'center', width: '5%' },
+                { 
+                    field: 'confKind', 
+                    title: '配置类型', 
+                    align: 'center', 
+                    width: '5%',
                     formatter: function (val, row, index) {
-                        let parentId = row.parentId;
-                        let adminMenus = TableHelper.getData('#table');
-                        let array = adminMenus.filter(v => v.menuId == parentId);
-                        let value = '无';
-                        if (array.length > 0) {
-                            value = array[0].name;
+                        let value = '';
+                        if (val == 0) {
+                            value = 'CUSTOM';
+                        } else if (val == 1) {
+                            value = 'TEXT';
+                        } else if (val == 2) {
+                            value = 'BOOL';
+                        } else if (val == 3) {
+                            value = 'JSON';
                         }
                         return value;
                     }
                 },
-                { field: 'path', title: '路径', width: '10%' },
-                {
-                    field: 'icon',
-                    title: '图标',
+                { field: 'status', title: '状态', align: 'center', width: '5%' },
+                { field: 'confValue', title: '配置项', align: 'center', width: '5%' },
+                { field: 'description', title: '描述', align: 'center', width: '5%' },
+                { 
+                    field: 'confType', 
+                    title: '属性特征', 
+                    align: 'center', 
                     width: '5%',
                     formatter: function (val, row, index) {
                         let value = '';
-                        if (val) {
-                            value = val;
-                        } else {
-                            if (row.parentId == 0) {
-                                value = 'fa fa-link';
-                            } else {
-                                value = 'fa fa-circle-o text-yellow';
-                            }
+                        if ((val & 0b1) != 0) {
+                            value += 'COMMON' + '<br/>';
                         }
-                        return '<i class="' + value + '"></i>';
-                    }
-                },
-                { field: 'showOrder', title: '排序', align: 'center', width: '5%' },
-                {
-                    field: 'status',
-                    title: '状态',
-                    align: 'center',
-                    width: '5%',
-                    formatter: function (val, row, index) {
-                        return val ? '有效' : '无效';
-                    }
+                        if ((val & 0b10) != 0) {
+                            value += 'SERVER' + '<br/>';
+                        }
+                        if ((val & 0b100) != 0) {
+                            value += 'CLIENT' + '<br/>';
+                        }
+                        return value;
+                    } 
                 },
                 {
                     field: 'createdAt',
@@ -173,7 +175,7 @@ export default {
                     }
                 },
                 {
-                    field: 'menuId',
+                    field: 'confId',
                     title: '操作',
                     align: 'center',
                     width: '20%',
@@ -184,21 +186,21 @@ export default {
                     }
                 }
             ],
-            adminMenus: [],
-            adminMenu: {
-                menuId: 0,
-                name: '',
-                path: '',
-                icon: '',
-                showOrder: 0,
+            sysConfs: [],
+            sysConf: {
+                confId: 0,
+                confKey: '',
+                confName: '',
+                confKind: 0,
+                confValue: '',
                 description: '',
                 status: 1,
-                parentId: 0,
+                confType: 0,
             },
         };
     },
     created() {
-        this.getMenu();
+        this.getSysConf();
         this.init();
     },
     methods: {
@@ -237,58 +239,68 @@ export default {
                 toolbar: '#toolbar',
             });
         },
-        getMenu() {
-            getAdminMenuList().then(res => {
-                this.adminMenus = res.data;
-                TableHelper.load('#table', this.adminMenus);
+        getSysConf() {
+            getAdminSysConf().then(res => {
+                this.sysConfs = res.data;
+                TableHelper.load('#table', this.sysConfs);
             });
         },
         add() {
-            this.adminMenu.menuId = 0;
-            this.adminMenu.name = '';
-            this.adminMenu.path = '';
-            this.adminMenu.icon = '';
-            this.adminMenu.showOrder = 0;
-            this.adminMenu.description = '';
-            this.adminMenu.status = 1;
-            this.adminMenu.parentId = 0;
+            this.sysConf.confId = 0;
+            this.sysConf.confKey = '';
+            this.sysConf.confName = '';
+            this.sysConf.confKind = 0;
+            this.sysConf.confValue = '';
+            this.sysConf.description = '';
+            this.sysConf.status = 1;
+            this.sysConf.confType = 0;
             this.show();
         },
         edit(obj) {
             const index = $(obj).data('index');
             const record = TableHelper.getData('#table')[index];
-            this.adminMenu.menuId = record.menuId;
-            this.adminMenu.name = record.name;
-            this.adminMenu.path = record.path;
-            this.adminMenu.icon = record.icon;
-            this.adminMenu.showOrder = record.showOrder;
-            this.adminMenu.description = record.description;
-            this.adminMenu.status = record.status;
-            this.adminMenu.parentId = record.parentId;
+            this.sysConf.confId = record.confId;
+            this.sysConf.confKey = record.confKey;
+            this.sysConf.confName = record.confName;
+            this.sysConf.confKind = record.confKind;
+            this.sysConf.confValue = record.confValue;
+            this.sysConf.description = record.description;
+            this.sysConf.status = record.status;
+            this.sysConf.confType = record.confType;
             this.show();
         },
         show() {
-            let menus = this.adminMenus.filter(v => v.parentId == 0).map(v => {
-                return {
-                    value: v.menuId,
-                    text: v.name
-                };
-            });
-            ComboboxHelper.build('#status', this.adminMenu.status);
-            ComboboxHelper.build('#parentId', this.adminMenu.parentId, [{ value: 0, text: '无' }].concat(menus));
+            let confType = this.sysConf.confType;
+            $("input:checkbox[value='1']").prop('checked', (confType & 0b1) != 0);
+            $("input:checkbox[value='2']").prop('checked', (confType & 0b10) != 0);
+            $("input:checkbox[value='4']").prop('checked', (confType & 0b100) != 0);
+            ComboboxHelper.build('#confKind', this.sysConf.confKind);
+            ComboboxHelper.build('#status', this.sysConf.status);
             $('#editModal').modal('show');
         },
         save() {
-            let data = this.adminMenu;
-            if (!data.name || data.name == '') {
-                alertMsg('菜单名称不允许为空！');
+            let data = this.sysConf;
+            if (!data.confKey || data.confKey == '') {
+                alertMsg('配置名称不允许为空！');
                 return;
             }
+            const confTypeArray = $("input:checkbox[name='confType']:checked").serializeArray();
+            if (!confTypeArray) {
+                $("#tipMsg").text("使用环境不能为空");
+                $("#tipModal").modal('show');
+                return;
+            }
+            let confType = 0;
+            for (let i = 0, len = confTypeArray.length; i < len; i++) {
+                console.log(confTypeArray[i]);
+                confType |= confTypeArray[i].value;
+            }
+            data.confType = confType;
             data.status = ComboboxHelper.getSelected('#status');
-            data.parentId = ComboboxHelper.getSelected('#parentId');
-            (data.menuId ? updateAdminMenu(data) : saveAdminMenu(data)).then(res => {
+            data.confKind = ComboboxHelper.getSelected('#confKind');
+            (data.confId ? updateAdminSysConf(data) : saveAdminSysConf(data)).then(res => {
                 console.log(res);
-                this.getMenu();
+                this.getSysConf();
                 $('#editModal').modal('hide');
             });
 
@@ -296,13 +308,13 @@ export default {
         del(obj) {
             const index = $(obj).data('index');
             const record = TableHelper.getData('#table')[index];
-            const menuId = record.menuId;
+            const confId = record.confId;
             if (!confirm('是否确定要删除？')) {
                 return;
             }
-            delAdminMenu(menuId).then(res => {
+            delAdminSysConf(confId).then(res => {
                 console.log(res);
-                this.getMenu();
+                this.getSysConf();
             });
         },
     },

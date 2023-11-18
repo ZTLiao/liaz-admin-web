@@ -1,3 +1,6 @@
+import store from '@/store';
+import global from '@/constants/global';
+
 export function showLoading() {
     $(".loadingGif").css('top', window.innerHeight / 2);
     $(".loadingGif").css('left', window.innerWidth / 2);
@@ -40,4 +43,18 @@ export function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
+}
+
+//获取链接
+export async function getFileUrl(uri) {
+    let perfix = '';
+    let sysConfs = store.getters.sysConfs;
+    if (sysConfs || sysConfs.length == 0) {
+        sysConfs = await store.dispatch('getSysConfs');
+    }
+    let sysConf = sysConfs.filter(v => v.confKey == global.SYS_CONF.FILE_URL)[0];
+    if (sysConf) {
+        perfix = sysConf.confValue;
+    }
+    return perfix + uri;
 }

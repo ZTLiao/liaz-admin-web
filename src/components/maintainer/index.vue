@@ -6,10 +6,10 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel">
                 <div class="pull-left image">
-                    <img :src="avatar" class="img-circle" :alt="username">
+                    <img :src="avatar" class="img-circle" :alt="name">
                 </div>
                 <div class="pull-left info">
-                    <p>{{ username }}</p>
+                    <p>{{ name }}</p>
                     <!-- Status -->
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
@@ -112,7 +112,7 @@ export default {
     data() {
         return {
             componentName: "",
-            username: "",
+            name: "",
             avatar: "",
             parentMenus: [],
             childMenus: [],
@@ -125,23 +125,16 @@ export default {
     },
     created() {
         this.getMenu();
-        this.username = store.getters.username;
+        this.name = store.getters.name;
         this.avatar = store.getters.avatar;
     },
     methods: {
         getMenu() {
-            // let parentMenus = getStore({ name: 'parent_menus' });
-            // let childMenus = getStore({ name: 'child_menus' });
-            // if (parentMenus && childMenus && parentMenus.length > 0 && childMenus.length > 0) {
-            //     this.parentMenus = parentMenus;
-            //     this.childMenus = childMenus;
-            // } else {
-                store.dispatch('getMenu').then(res => {
-                    console.log(res);
-                    this.parentMenus = getStore({ name: 'parent_menus' });
-                    this.childMenus = getStore({ name: 'child_menus' });
-                });
-            // }
+            store.dispatch('getMenu').then(res => {
+                console.log(res);
+                this.parentMenus = getStore({ name: 'parent_menus' });
+                this.childMenus = getStore({ name: 'child_menus' });
+            });
         },
         getChilds(parentId) {
             return this.childMenus.filter(v => v.parentId == parentId);

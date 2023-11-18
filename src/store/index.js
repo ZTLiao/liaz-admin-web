@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import user from './modules/user'
 import menu from './modules/menu'
+import sysConf from './modules/sysConf'
 
 export default createStore({
   state: {
@@ -14,6 +15,7 @@ export default createStore({
     lastTime: state => state.user.lastTime,
     parentMenus: state => state.menu.parentMenus,
     childMenus: state => state.menu.childMenus,
+    sysConfs: state => state.sysConf.sysConfs,
   },
   mutations: {
   },
@@ -22,5 +24,6 @@ export default createStore({
   modules: {
     user,
     menu,
+    sysConf,
   }
 })

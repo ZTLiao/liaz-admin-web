@@ -53,7 +53,7 @@
                             <label class="col-sm-3 control-label">头像</label>
                             <div class="col-sm-8">
                                 <input type="hidden" class="form-control" name="avatar" v-model="adminUser.avatar" />
-                                <img :src="adminUser.avatar" style="width:120px;"/>
+                                <img :src="avatarFormatter(adminUser.avatar)" style="width:120px;"/>
                                 <input type="file" class="form-control" id="file" name="file">
                             </div>
                         </div>
@@ -182,7 +182,7 @@ import { getAdminUserRole, saveAdminUserRole } from '@/api/system/userRole';
 import { getAdminRoleMenu } from '@/api/system/roleMenu';
 import { uploadFile } from '@/api/common/upload';
 
-import { alertMsg } from '@/utils/system-helper';
+import { alertMsg, getFileUrl } from '@/utils/system-helper';
 import avatar from '@/assets/images/man.jpg';
 import global from '@/constants/global';
 
@@ -200,7 +200,7 @@ export default {
                     align: 'center',
                     width: '5%',
                     formatter: function (val, row, index) {
-                        return '<img src="' + (val ? val : avatar) + '" width="70" height="60"/>';
+                        return '<img src="' + (val ? getFileUrl(val) : avatar) + '" width="70" height="60"/>';
                     }
                 },
                 {
@@ -261,6 +261,9 @@ export default {
         this.init();
     },
     methods: {
+        avatarFormatter(path) {
+            return getFileUrl(path);
+        },
         init() {
             this.$nextTick(function () {
                 let $this = this;
@@ -273,7 +276,7 @@ export default {
                         id: 'file',
                         bucketName: global.BUCKET.AVATAR
                     }).then(res => {
-                        console.log(res);
+                        $this.adminUser.avatar = res.data.path;
                     });
                 });
                 $('#table').on('click', '.opt-edit', function () {

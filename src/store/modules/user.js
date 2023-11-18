@@ -1,7 +1,9 @@
 import router from '@/router';
-import { setStore, getStore } from '@/utils/store';
 import { getUser, logout } from '@/api/system/user';
+
+import { setStore, getStore } from '@/utils/store';
 import { dateFormat } from '@/utils/date';
+import { getFileUrl } from '@/utils/system-helper';
 
 import avatar from '@/assets/images/man.jpg';
 
@@ -42,7 +44,7 @@ export default {
             }
             let userAvatar = user.avatar;
             if (userAvatar) {
-                userAvatar = (userAvatar.startsWith('https') || userAvatar.startsWith('http')) ? userAvatar : avatar;
+                userAvatar = (userAvatar.startsWith('https') || userAvatar.startsWith('http')) ? userAvatar : getFileUrl(userAvatar);
             } else {
                 userAvatar = avatar;
             }

@@ -77,18 +77,30 @@ export default {
             }).then(res => {
                 if (res.code == global.HTTP_STATUS.OK) {
                     console.log("login success.");
-                    setStore({
-                        name: "access_token",
-                        content: res.data.accessToken,
-                        type: "session"
-                    });
-                    store.dispatch('getUser').then(res => {
-                        console.log(res);
-                        window.location.href = '#/blank';
-                    });
+                    this.storeAccessToken(res.data.accessToken);
+                    this.getSysConfs();
                 } else {
                     $(".loginTips").html(res.message).css("padding", "3px 5px");
                 }
+            });
+        },
+        storeAccessToken(accessToken) {
+            setStore({
+                name: "access_token",
+                content: accessToken,
+                type: "session"
+            });
+        },
+        getSysConfs() {
+            store.dispatch('getSysConfs').then(res => {
+                console.log(res);
+                this.updateUser();
+            });
+        },
+        updateUser() {
+            store.dispatch('getUser').then(res => {
+                console.log(res);
+                window.location.href = '#/blank';
             });
         },
     },
