@@ -105,6 +105,17 @@ import { alertMsg } from '@/utils/system-helper';
 
 export default {
     name: 'AdminSysConfView',
+    setup() {
+        function showText(obj) {
+            let text = unescape($(obj).prop('title'));
+            $("#tipMsg").text(text);
+            $("#tipModal").modal('show');
+        }
+        window.showText = showText;
+        return {
+            showText
+        };
+    },
     data() {
         return {
             columns: [
@@ -131,7 +142,15 @@ export default {
                     }
                 },
                 { field: 'status', title: '状态', align: 'center', width: '5%' },
-                { field: 'confValue', title: '配置项', align: 'center', width: '5%' },
+                { 
+                    field: 'confValue', 
+                    title: '配置项', 
+                    align: 'center', 
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        return '<div style="text-align: center; width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + escape(val) + '" onclick="showText(this);">' + val + '</div>';
+                    }
+                },
                 { field: 'description', title: '描述', align: 'center', width: '5%' },
                 { 
                     field: 'confType', 

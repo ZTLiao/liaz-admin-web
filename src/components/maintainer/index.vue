@@ -130,6 +130,8 @@ export default {
     },
     methods: {
         getMenu() {
+            this.parentMenus = getStore({ name: 'parent_menus' });
+            this.childMenus = getStore({ name: 'child_menus' });
             store.dispatch('getMenu').then(res => {
                 console.log(res);
                 this.parentMenus = getStore({ name: 'parent_menus' });
@@ -157,15 +159,14 @@ export default {
             if (!this.childMenus.length || this.childMenus.length == 0) {
                 this.parentMenus = store.getters.parentMenus.filter(v => v.name.indexOf(text) >= 0);
             } else {
-                let parentIds = this.childMenus.map(v => v.parentId);
+                let parentIds = this.childMenus.map(v => v.parentid);
                 let parentMenus = store.getters.parentMenus.filter(v => v.name.indexOf(text) >= 0);
                 if (parentMenus && parentMenus.length > 0) {
                     parentMenus.forEach(v => {
-                        parentIds.push(v.menuId);
+                        parentIds.push(v.id);
                     });
                 }
-                this.parentMenus = store.getters.parentMenus.filter(v1 => parentIds.filter(v2 => v1.menuId == v2).length > 0);
-                this.childMenus = store.getters.childMenus.filter(v1 => parentIds.filter(v2 => v1.parentId == v2).length > 0);
+                this.parentMenus = store.getters.parentMenus.filter(v1 => parentIds.filter(v2 => v1.id == v2).length > 0);
             }
         }
     },
