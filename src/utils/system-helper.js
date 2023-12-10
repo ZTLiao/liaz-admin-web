@@ -48,3 +48,15 @@ export function getUrlParam(name) {
 export function getFileUrl(uri) { 
     return getStore({name: 'file_url' }) + uri;
 }
+
+export function buildSelectOption(id, defVal, array) {
+    let $select = $(id);
+    for(let i in array) {
+        let obj = array[i];
+        let selected = false;
+        if (obj.value == defVal) {
+            selected = true;
+        }
+        $select.append('<option value="' + obj.value + '"' + (selected ? 'selected' : '') + '>' + obj.text + '</option>');
+    }
+}

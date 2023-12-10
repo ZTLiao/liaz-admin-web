@@ -53,7 +53,7 @@
                             <label class="col-sm-3 control-label">头像</label>
                             <div class="col-sm-8">
                                 <input type="hidden" class="form-control" name="avatar" v-model="adminUser.avatar" />
-                                <img :src="avatarFormatter(adminUser.avatar)" style="width:120px;"/>
+                                <img :src="imgFormatter(adminUser.avatar)" style="width:120px;"/>
                                 <input type="file" class="form-control" id="file" name="file">
                             </div>
                         </div>
@@ -181,7 +181,6 @@ import { getAdminUserList, saveAdminUser, updateAdminUser, delAdminUser, thawAdm
 import { getAdminUserRole, saveAdminUserRole } from '@/api/system/userRole';
 import { getAdminRoleMenu } from '@/api/system/roleMenu';
 import { uploadFile } from '@/api/common/upload';
-
 import { alertMsg, getFileUrl } from '@/utils/system-helper';
 import avatar from '@/assets/images/man.jpg';
 import global from '@/constants/global';
@@ -262,7 +261,7 @@ export default {
         this.init();
     },
     methods: {
-        avatarFormatter(path) {
+        imgFormatter(path) {
             return getFileUrl(path);
         },
         init() {
