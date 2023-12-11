@@ -47,6 +47,5 @@ import '@/assets/plugins/bootstrap-treeview/css/bootstrap-treeview.min.css'
 import '@/assets/plugins/bootstrap-treeview/js/bootstrap-treeview.min'
 
 import components from '@/utils/components'
-import mixin from '@/utils/mixin'
 
-createApp(App).mixin(mixin).use(store).use(router).use(components).mount('#app')
+createApp(App).use(store).use(router).use(components).mount('#app')
