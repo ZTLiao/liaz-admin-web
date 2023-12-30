@@ -108,7 +108,9 @@ export default {
     setup() {
         function showText(obj) {
             let text = unescape($(obj).prop('title'));
-            $("#tipMsg").text(text);
+            let $div = $("#tipMsg"); 
+            $div.attr('style', 'word-wrap: break-word;');
+            $div.text(text);
             $("#tipModal").modal('show');
         }
         window.showText = showText;

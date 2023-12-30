@@ -31,9 +31,9 @@ export const delAdminSysConf = id => {
     });
 }
 
-export const getAdminSysConfByKind = kind => {
+export const getAdminSysConfByType = type => {
     return request({
-        url: '/admin/sys/conf/' + kind,
+        url: '/admin/sys/conf/' + type,
         method: 'get'
     });
 }

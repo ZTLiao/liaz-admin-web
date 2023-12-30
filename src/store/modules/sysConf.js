@@ -1,5 +1,5 @@
 import { setStore } from '@/utils/store';
-import { getAdminSysConfByKind } from '@/api/system/sysConf';
+import { getAdminSysConfByType } from '@/api/system/sysConf';
 import global from '@/constants/global';
 
 export default {
@@ -28,7 +28,7 @@ export default {
     },
     actions: {
         async getSysConfs({ commit }) {
-            const res = await getAdminSysConfByKind(1);
+            const res = await getAdminSysConfByType(1);
             var data = res.data || {};
             commit("setSysConfs", data);
             return data;
