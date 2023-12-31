@@ -15,11 +15,19 @@ export default {
                     content: sysConfs.filter(v => v.confKey && v.confKey != ''),
                     type: "session"
                 });
-                let sysConf = sysConfs.filter(v => v.confKey == global.SYS_CONF.FILE_URL)[0];
-                if (sysConf) {
+                let fileUrl = sysConfs.filter(v => v.confKey == global.SYS_CONF.FILE_URL)[0];
+                if (fileUrl) {
                     setStore({
                         name: "file_url",
-                        content: sysConf.confValue,
+                        content: fileUrl.confValue,
+                        type: "session" 
+                    });
+                }
+                let resourceAuthority = sysConfs.filter(v => v.confKey == global.SYS_CONF.RESOURCE_AUTHORITY)[0];
+                if (resourceAuthority) {
+                    setStore({
+                        name: "resource_authority",
+                        content: new Boolean(resourceAuthority.confValue),
                         type: "session" 
                     });
                 }

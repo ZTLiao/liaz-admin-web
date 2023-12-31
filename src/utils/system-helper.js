@@ -1,4 +1,6 @@
 import { getStore } from '@/utils/store';
+import { getObject } from '@/api/system/file';
+import global from '@/constants/global';
 
 export function showLoading() {
     $(".loadingGif").css('top', window.innerHeight / 2);
@@ -45,8 +47,16 @@ export function getUrlParam(name) {
 }
 
 //获取链接
-export function getFileUrl(uri) { 
-    return getStore({name: 'file_url' }) + uri;
+export function getFileUrl(path) {
+    if (!path) {
+        return path;
+    }
+    let fileUrl = getStore({name: global.SYS_CONF.FILE_URL });
+    let isAuthority = getStore({name: global.SYS_CONF.RESOURCE_AUTHORITY });
+    if (isAuthority) {
+       path = getObject(path).data;
+    }
+    return fileUrl + path;
 }
 
 export function buildSelectOption(id, defVal, array) {
