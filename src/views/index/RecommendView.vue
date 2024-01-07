@@ -165,6 +165,10 @@ export default {
                             value = '热门推荐';
                         } else if (val == 3) {
                             value = '最近上新';
+                        } else if (val == 4) {
+                            value = '作者关联';
+                        } else if (val == 5) {
+                            value = '同类题材';
                         }
                         return value;
                     }
@@ -214,6 +218,8 @@ export default {
                             value = '刷新';
                         } else if (val == 2) {
                             value = '更多';
+                        } else if (val == 3) {
+                            value = '跳转';
                         }
                         return value;
                     }
