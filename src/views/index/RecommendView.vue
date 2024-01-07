@@ -54,6 +54,8 @@
                                     <option value="1">我的订阅</option>
                                     <option value="2">热门推荐</option>
                                     <option value="3">最近上新</option>
+                                    <option value="4">作者关联</option>
+                                    <option value="5">同类题材</option>
                                 </select>
                             </div>
                         </div>
@@ -84,6 +86,7 @@
                                     <option value="0">无</option>
                                     <option value="1">刷新</option>
                                     <option value="2">更多</option>
+                                    <option value="3">跳转</option>
                                 </select>
                             </div>
                         </div>
