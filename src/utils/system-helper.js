@@ -51,10 +51,31 @@ export function getFileUrl(path) {
     if (!path) {
         return path;
     }
+    if (path.startsWith('https') || path.startsWith('http')) {
+        return path;
+    }
+    let requestUri = path;
     let fileUrl = getStore({name: global.SYS_CONF.FILE_URL });
     let isAuthority = getStore({name: global.SYS_CONF.RESOURCE_AUTHORITY });
     if (isAuthority) {
-       path = getObject(path).data;
+       requestUri = getObject(path).data;
+    }
+    if (requestUri.startsWith('https') || requestUri.startsWith('http')) {
+        return requestUri;
+    }
+    let pathArray = path.split('/');
+    let bucketName = StrUtil.empty;
+    if (pathArray.length > 1) {
+      bucketName = path[1];
+    }
+    let objectName = StrUtil.empty;
+    if (pathArray.length > 2) {
+      objectName = path[2];
+    }
+    let bucketTemplate = '{bucketName}';
+    let objectTemplate = '{objectName}';
+    if (fileUrl.indexOf(bucketTemplate) != -1 && fileUrl.indexOf(objectTemplate) != -1) {
+        return fileUrl.replace(bucketTemplate, bucketName).replace(objectTemplate, objectName);
     }
     return fileUrl + path;
 }
