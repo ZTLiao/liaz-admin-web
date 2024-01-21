@@ -67,11 +67,11 @@ export function getFileUrl(path) {
     let objectTemplate = '{objectName}';
     if (fileUrl.indexOf(bucketTemplate) != -1 && fileUrl.indexOf(objectTemplate) != -1) {
         let pathArray = path.split('/');
-        let bucketName = StrUtil.empty;
+        let bucketName = '';
         if (pathArray.length > 1) {
           bucketName = path[1];
         }
-        let objectName = StrUtil.empty;
+        let objectName = '';
         if (pathArray.length > 2) {
           objectName = path[2];
         }
