@@ -143,7 +143,15 @@ export default {
                         return value;
                     }
                 },
-                { field: 'status', title: '状态', align: 'center', width: '5%' },
+                {  
+                    field: 'status', 
+                    title: '状态', 
+                    align: 'center', 
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        return val ? '有效' : '无效';
+                    }
+                },
                 { 
                     field: 'confValue', 
                     title: '配置项', 
