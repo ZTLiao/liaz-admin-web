@@ -63,18 +63,18 @@ export function getFileUrl(path) {
     if (requestUri.startsWith('https') || requestUri.startsWith('http')) {
         return requestUri;
     }
-    let pathArray = path.split('/');
-    let bucketName = StrUtil.empty;
-    if (pathArray.length > 1) {
-      bucketName = path[1];
-    }
-    let objectName = StrUtil.empty;
-    if (pathArray.length > 2) {
-      objectName = path[2];
-    }
     let bucketTemplate = '{bucketName}';
     let objectTemplate = '{objectName}';
     if (fileUrl.indexOf(bucketTemplate) != -1 && fileUrl.indexOf(objectTemplate) != -1) {
+        let pathArray = path.split('/');
+        let bucketName = StrUtil.empty;
+        if (pathArray.length > 1) {
+          bucketName = path[1];
+        }
+        let objectName = StrUtil.empty;
+        if (pathArray.length > 2) {
+          objectName = path[2];
+        }
         return fileUrl.replace(bucketTemplate, bucketName).replace(objectTemplate, objectName);
     }
     return fileUrl + path;
