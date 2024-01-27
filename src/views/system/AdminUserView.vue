@@ -366,7 +366,7 @@ export default {
                 data.password = $.md5(data.password);
             }
             data.status = ComboboxHelper.getSelected('#status');
-            (data.adminId ? updateAdminUser(data) : saveAdminUser(data)).then(res => {
+            (data.adminId != 0 ? updateAdminUser(data) : saveAdminUser(data)).then(res => {
                 console.log(res);
                 this.getUser();
                 $('#userModal').modal('hide');

@@ -327,7 +327,7 @@ export default {
             data.confType = confType;
             data.status = ComboboxHelper.getSelected('#status');
             data.confKind = ComboboxHelper.getSelected('#confKind');
-            (data.confId ? updateAdminSysConf(data) : saveAdminSysConf(data)).then(res => {
+            (data.confId != 0 ? updateAdminSysConf(data) : saveAdminSysConf(data)).then(res => {
                 console.log(res);
                 this.getSysConf();
                 $('#editModal').modal('hide');

@@ -190,7 +190,7 @@ export default {
         },
         save() {
             let data = this.adminRole;
-            (data.roleId ? updateAdminRole(data) : saveAdminRole(data)).then(res => {
+            (data.roleId != 0 ? updateAdminRole(data) : saveAdminRole(data)).then(res => {
                 console.log(res);
                 this.getRole();
                 $('#editModal').modal('hide');

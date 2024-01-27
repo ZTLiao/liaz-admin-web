@@ -365,7 +365,7 @@ export default {
                 seqNo: new Number(this.recommendItem.seqNo),
                 status: new Number(this.recommendItem.status),
             };
-            (data.recommendItemId ? updateRecommendItem(data) : saveRecommendItem(data)).then(res => {
+            (data.recommendItemId != 0 ? updateRecommendItem(data) : saveRecommendItem(data)).then(res => {
                 console.log(res);
                 TableHelper.doRefresh('#table');
                 $('#editModal').modal('hide');

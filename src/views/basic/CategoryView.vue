@@ -226,7 +226,7 @@ export default {
                 seqNo: new Number(this.category.seqNo),
                 status: new Number(this.category.status),
             };
-            (data.catepgoryId ? updateCategory(data) : saveCategory(data)).then(res => {
+            (data.catepgoryId != 0 ? updateCategory(data) : saveCategory(data)).then(res => {
                 console.log(res);
                 TableHelper.doRefresh('#table');
                 $('#editModal').modal('hide');

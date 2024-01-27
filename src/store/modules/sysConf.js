@@ -20,15 +20,21 @@ export default {
                     setStore({
                         name: "file_url",
                         content: fileUrl.confValue,
-                        type: "session" 
+                        type: "session"
                     });
                 }
                 let resourceAuthority = sysConfs.filter(v => v.confKey == global.SYS_CONF.RESOURCE_AUTHORITY)[0];
                 if (resourceAuthority) {
+                    let isAuthority = false;
+                    if (resourceAuthority == 'true') {
+                        isAuthority = true;
+                    } else if (resourceAuthority == 'false') {
+                        isAuthority = false;
+                    }
                     setStore({
                         name: "resource_authority",
-                        content: new Boolean(resourceAuthority.confValue),
-                        type: "session" 
+                        content: isAuthority,
+                        type: "session"
                     });
                 }
             }

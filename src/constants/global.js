@@ -12,6 +12,7 @@ export default {
     BUCKET: {
         AVATAR: 'avatar',
         RECOMMEND: 'recommend',
+        DOWNLOAD: 'download',
     },
     SYS_CONF: {
         FILE_URL: 'file_url',

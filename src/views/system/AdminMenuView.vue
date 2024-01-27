@@ -286,7 +286,7 @@ export default {
             }
             data.status = ComboboxHelper.getSelected('#status');
             data.parentId = ComboboxHelper.getSelected('#parentId');
-            (data.menuId ? updateAdminMenu(data) : saveAdminMenu(data)).then(res => {
+            (data.menuId != 0 ? updateAdminMenu(data) : saveAdminMenu(data)).then(res => {
                 console.log(res);
                 this.getMenu();
                 $('#editModal').modal('hide');

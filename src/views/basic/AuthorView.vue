@@ -214,7 +214,7 @@ export default {
                 seqNo: new Number(this.author.seqNo),
                 status: new Number(this.author.status),
             };
-            (data.authorId ? updateAuthor(data) : saveAuthor(data)).then(res => {
+            (data.authorId != 0 ? updateAuthor(data) : saveAuthor(data)).then(res => {
                 console.log(res);
                 TableHelper.doRefresh('#table');
                 $('#editModal').modal('hide');
