@@ -34,8 +34,8 @@
                             <label for="os" class="col-sm-3 control-label">系统:</label>
                             <div class="col-sm-8">
                                 <select name="os" id="os" class="form-control" data-btn-class="btn-warning"  v-model="appVersion.os">
-                                    <option value="Android">Android</option>
-                                    <option value="iOS">iOS</option>
+                                    <option value="android">Android</option>
+                                    <option value="ios">iOS</option>
                                 </select>
                             </div>
                         </div>
