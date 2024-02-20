@@ -11,7 +11,7 @@
                     <br/>
                     <br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button id="uploadFiles" class="btn btn-sm btn-primary">上传文件</button>
+                    <button id="uploadFiles" class="btn btn-sm btn-primary">批量上传</button>
                     <h3 id="urlInfo"></h3>
                     <br/>
                 </div>
