@@ -98,10 +98,12 @@ export default {
                     align: 'center', 
                     width: '15%',
                     formatter: function (val, row, index) {
-                        let value = '';
-                        let groups = this.categoryGroups.filter(v => v.groupCode == val);
-                        if (groups.length > 0) {
-                            value = groups[0].groupName;
+                        let value = val;
+                        if (this.categoryGroups.length > 0) {
+                            let groups = this.categoryGroups.filter(v => v.groupCode == val);
+                            if (groups.length > 0) {
+                                value = groups[0].groupName;
+                            }
                         }
                         return value;
                     }
