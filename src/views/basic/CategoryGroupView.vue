@@ -25,31 +25,23 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="modalLabel">分类信息</h4>
+                    <h4 class="modal-title" id="modalLabel">分类分组信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <input type="hidden" name="categoryId" v-model="category.categoryId" />
+                        <input type="hidden" name="categoryGroupId" v-model="categoryGroup.categoryGroupId" />
                         <div class="form-group">
-                            <label for="categoryCode" class="col-sm-3 control-label">分类编码:</label>
+                            <label for="groupCode" class="col-sm-3 control-label">分组编码:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="categoryCode" id="categoryCode"
-                                    v-model="category.categoryCode" />
+                                <input type="text" class="form-control validate[required]" name="groupCode" id="groupCode"
+                                    v-model="categoryGroup.groupCode" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="categoryName" class="col-sm-3 control-label">分类名称:</label>
+                            <label for="groupName" class="col-sm-3 control-label">分组名称:</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control validate[required]" name="categoryName" id="categoryName"
-                                    v-model="category.categoryName" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="groupCode" class="col-sm-3 control-label">分类分组:</label>
-                            <div class="col-sm-8">
-                                    <select name="groupCode" id="groupCode" class="form-control" data-btn-class="btn-warning"  v-model="category.groupCode">
-                                    <option :value="categoryGroup.groupCode" v-for="(categoryGroup, index) in categoryGroups" :key="categoryGroup" :data-index="index">{{ categoryGroup.groupName }}</option>
-                                </select>
+                                <input type="text" class="form-control validate[required]" name="groupName" id="groupName"
+                                    v-model="categoryGroup.groupName" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -81,31 +73,16 @@
   
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
-import { getCategoryPage, saveCategory, updateCategory, delCategory } from '@/api/basic/category';
-import { getCategoryGroupList } from '@/api/basic/categoryGroup';
+import { getCategoryGroupPage, saveCategoryGroup, updateCategoryGroup, delCategoryGroup } from '@/api/basic/categoryGroup';
 
 export default {
-    name: 'CategoryView',
+    name: 'CategoryGroupView',
     data() {
         return {
             columns: [
-                { field: 'categoryId', title: '分类ID', align: 'center', width: '5%' },
-                { field: 'categoryCode', title: '分类编码', align: 'center', width: '15%' },
-                { field: 'categoryName', title: '分类名称', align: 'center', width: '15%' },
-                { 
-                    field: 'groupCode', 
-                    title: '分类分组', 
-                    align: 'center', 
-                    width: '15%',
-                    formatter: function (val, row, index) {
-                        let value = '';
-                        let groups = this.categoryGroups.filter(v => v.groupCode == val);
-                        if (groups.length > 0) {
-                            value = groups[0].groupName;
-                        }
-                        return value;
-                    }
-                },
+                { field: 'categoryGroupId', title: '分组ID', align: 'center', width: '5%' },
+                { field: 'groupCode', title: '分组编码', align: 'center', width: '15%' },
+                { field: 'groupName', title: '分组名称', align: 'center', width: '15%' },
                 { field: 'seqNo', title: '排序', align: 'center', width: '5%' },
                 {
                     field: 'status',
@@ -145,7 +122,7 @@ export default {
                     }
                 },
                 {
-                    field: 'categoryId',
+                    field: 'categoryGroupId',
                     title: '操作',
                     align: 'center',
                     width: '20%',
@@ -156,19 +133,16 @@ export default {
                     }
                 }
             ],
-            category: {
-                categoryId: 0,
-                categoryCode: '',
-                categoryName: '',
+            categoryGroup: {
+                categoryGroupId: 0,
                 groupCode: '',
+                groupName: '',
                 seqNo: 0,
                 status: 1,
             },
-            categoryGroups: [], 
         };
     },
     created() {
-        this.groupList();
         this.init();
     },
     methods: {
@@ -212,7 +186,7 @@ export default {
                     return param;
                 },
                 ajax:function(request){
-                    getCategoryPage(request.data).then(res => {
+                    getCategoryGroupPage(request.data).then(res => {
                         let data = res.data;
                         request.success({
                             'rows': data.records,
@@ -224,23 +198,21 @@ export default {
             });
         },
         add() {
-            this.category.categoryId = 0;
-            this.category.categoryCode = '';
-            this.category.categoryName = '';
-            this.category.groupCode = '';
-            this.category.seqNo = 0;
-            this.category.status = 1;
+            this.categoryGroup.categoryGroupId = 0;
+            this.categoryGroup.groupCode = '';
+            this.categoryGroup.groupName = '';
+            this.categoryGroup.seqNo = 0;
+            this.categoryGroup.status = 1;
             this.show();
         },
         edit(obj) {
             const index = $(obj).data('index');
             const record = TableHelper.getData('#table')[index];
-            this.category.categoryId = record.categoryId;
-            this.category.categoryCode = record.categoryCode;
-            this.category.categoryName = record.categoryName;
-            this.category.groupCode = record.groupCode;
-            this.category.seqNo = record.seqNo;
-            this.category.status = record.status;
+            this.categoryGroup.categoryGroupId = record.categoryGroupId;
+            this.categoryGroup.groupCode = record.groupCode;
+            this.categoryGroup.groupName = record.groupName;
+            this.categoryGroup.seqNo = record.seqNo;
+            this.categoryGroup.status = record.status;
             this.show();
         },
         show() {
@@ -248,14 +220,13 @@ export default {
         },
         save() {
             let data = {
-                categoryId: this.category.categoryId,
-                categoryCode: this.category.categoryCode,
-                categoryName: this.category.categoryName,
-                groupCode: this.category.groupCode,
-                seqNo: new Number(this.category.seqNo),
-                status: new Number(this.category.status),
+                categoryGroupId: this.categoryGroup.categoryGroupId,
+                groupCode: this.categoryGroup.groupCode,
+                groupName: this.categoryGroup.groupName,
+                seqNo: new Number(this.categoryGroup.seqNo),
+                status: new Number(this.categoryGroup.status),
             };
-            (data.categoryId != 0 ? updateCategory(data) : saveCategory(data)).then(res => {
+            (data.categoryGroupId != 0 ? updateCategoryGroup(data) : saveCategoryGroup(data)).then(res => {
                 console.log(res);
                 TableHelper.doRefresh('#table');
                 $('#editModal').modal('hide');
@@ -265,24 +236,13 @@ export default {
         del(obj) {
             const index = $(obj).data('index');
             const record = TableHelper.getData('#table')[index];
-            const categoryId = record.categoryId;
+            const categoryGroupId = record.categoryGroupId;
             if (!confirm('是否确定要删除？')) {
                 return;
             }
-            delCategory(categoryId).then(res => {
+            delCategoryGroup(categoryGroupId).then(res => {
                 console.log(res);
                 TableHelper.doRefresh('#table');
-            });
-        },
-        groupList() {
-            getCategoryGroupList().then(res => {
-                let data = res.data;
-                this.categoryGroups = data.map(v => {
-                    return {
-                        groupCode: v.groupCode,
-                        groupName: v.groupName,
-                    }
-                });
             });
         },
     },
