@@ -48,13 +48,13 @@
                             <label for="seqNo" class="col-sm-3 control-label">排序:</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control validate[required]" name="seqNo" id="seqNo"
-                                    v-model="category.seqNo" />
+                                    v-model="categoryGroup.seqNo" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="status" class="col-sm-3 control-label">状态:</label>
                             <div class="col-sm-8">
-                                <select name="status" id="status" class="form-control" data-btn-class="btn-warning"  v-model="category.status">
+                                <select name="status" id="status" class="form-control" data-btn-class="btn-warning"  v-model="categoryGroup.status">
                                     <option value="1">有效</option>
                                     <option value="0">无效</option>
                                 </select>
