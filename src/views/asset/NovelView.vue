@@ -22,17 +22,13 @@
   
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
-import { getMessageBoardPage } from '@/api/basic/messageBoard';
+import { getNovelPage } from '@/api/asset/novel';
 
 export default {
-    name: 'MessageBoardView',
+    name: 'NovelView',
     data() {
         return {
             columns: [
-                { field: 'deviceId', title: '设备ID', align: 'center', width: '5%' },
-                { field: 'clientIp', title: 'IP地址', align: 'center', width: '15%' },
-                { field: 'ipRegion', title: 'IP地区', align: 'center', width: '15%' },
-                { field: 'content', title: '内容', align: 'center', width: '5%' },
                 {
                     field: 'createdAt',
                     title: '创建时间',
@@ -43,7 +39,18 @@ export default {
                         dateTime.setTime(val);
                         return dateTime.toLocaleString();
                     }
-                }, 
+                },
+                {
+                    field: 'updatedAt',
+                    title: '修改时间',
+                    align: 'center',
+                    width: '10%',
+                    formatter: function (val, row, index) {
+                        let dateTime = new Date();
+                        dateTime.setTime(val);
+                        return dateTime.toLocaleString();
+                    }
+                },
             ],
         };
     },
@@ -79,7 +86,7 @@ export default {
                     return param;
                 },
                 ajax:function(request){
-                    getMessageBoardPage(request.data).then(res => {
+                    getNovelPage(request.data).then(res => {
                         let data = res.data;
                         request.success({
                             'rows': data.records,
