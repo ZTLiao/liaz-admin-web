@@ -18,12 +18,90 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabel">漫画信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" name="comicId" v-model="comic.comicId"/>
+                        <div class="form-group">
+                            <label for="firstLetter" class="col-sm-3 control-label">首字母:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control validate[required]" name="firstLetter" id="firstLetter"
+                                    v-model="comic.firstLetter" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="title" class="col-sm-3 control-label">漫画名称:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control validate[required]" name="title" id="title"
+                                    v-model="comic.title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">封面</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" class="form-control" name="cover" v-model="comic.cover" />
+                                <img :src="imgFormatter(comic.cover)" style="width:120px;"/>
+                                <input type="file" class="form-control" id="file" name="file">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-8">
+                                <button class="btn btn-success col-sm-4" type="button" id="uploadBtn">上传</button>
+                                <span class="btn col-sm-4" id="uploadInfo" style="color:red;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-3 control-label">描述:</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" name="description" id="description" v-model="comic.description">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="direction" class="col-sm-3 control-label">阅读方向:</label>
+                            <div class="col-sm-8">
+                                <select name="direction" id="direction" data-btn-class="btn-warning" v-model="comic.direction">
+                                    <option value="0">左右</option>
+                                    <option value="1">上下</option>
+                                    <option value="2">右左</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="col-sm-3 control-label">状态:</label>
+                            <div class="col-sm-8">
+                                <select name="status" id="status" data-btn-class="btn-warning">
+                                    <option value="1">有效</option>
+                                    <option value="0">无效</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
   
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
+import { uploadFile } from '@/api/common/upload';
 import { getComicPage } from '@/api/asset/comic';
 import { getFileUrl } from '@/utils/system-helper';
+import global from '@/constants/global';
 
 export default {
     name: 'ComicView',
@@ -69,7 +147,7 @@ export default {
                 },
                 { 
                     field: 'direction', 
-                    title: '手势方向', 
+                    title: '阅读方向', 
                     align: 'center', 
                     width: '5%',
                     formatter: function (val, row, index) {
@@ -197,10 +275,21 @@ export default {
         this.init();
     },
     methods: {
+        imgFormatter(path) {
+            return getFileUrl(path);
+        },
         init() {
             this.$nextTick(function () {
                 let $this = this;
                 $this.initTable();
+                $('#uploadBtn').click(function () {
+                    uploadFile({
+                        id: 'file',
+                        bucketName: global.BUCKET.COVER
+                    }).then(res => {
+                        $this.comic.cover = res.data.path;
+                    });
+                });
             });
         },
         initTable() {

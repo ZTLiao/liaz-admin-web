@@ -13,6 +13,7 @@ export default {
         AVATAR: 'avatar',
         RECOMMEND: 'recommend',
         DOWNLOAD: 'download',
+        COVER: 'cover',
     },
     SYS_CONF: {
         FILE_URL: 'file_url',
