@@ -99,7 +99,7 @@
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
 import { uploadFile } from '@/api/common/upload';
-import { getComicPage } from '@/api/asset/comic';
+import { getComicPage, saveComic, updateComic, delComic } from '@/api/asset/comic';
 import { getFileUrl } from '@/utils/system-helper';
 import global from '@/constants/global';
 
@@ -290,6 +290,15 @@ export default {
                         $this.comic.cover = res.data.path;
                     });
                 });
+                $('#table').on('click', '.opt-edit', function () {
+                    $this.edit(this);
+                });
+                $('#table').on('click', '.opt-del', function () {
+                    $this.del(this);
+                });
+                $('#save').click(function () {
+                    $this.save();
+                });
             });
         },
         initTable() {
@@ -323,6 +332,74 @@ export default {
                     });
                 },
                 toolbar: '#toolbar',
+            });
+        },
+        edit(obj) {
+            const index = $(obj).data('index');
+            const record = TableHelper.getData('#table')[index];
+            this.comic.comicId = record.comicId;
+            this.comic.title = record.title;
+            this.comic.cover = record.cover;
+            this.comic.description = record.description;
+            this.comic.firstLetter = record.firstLetter;
+            this.comic.direction = record.direction;
+            this.comic.flag = record.flag;
+            this.comic.categoryIds = record.categoryIds;
+            this.comic.categories = record.categories;
+            this.comic.authorIds = record.authorIds;
+            this.comic.authors = record.authors;
+            this.comic.regionId = record.regionId;
+            this.comic.region = record.region;
+            this.comic.chapterNum = record.chapterNum;
+            this.comic.startTime = record.startTime;
+            this.comic.endTime = record.endTime;
+            this.comic.subscribeNum = record.subscribeNum;
+            this.comic.hitNum = record.hitNum;
+            this.comic.status = record.status;
+            this.show();
+        },
+        show() {
+            $('#editModal').modal('show');
+        },
+        save() {
+            let data = {
+                comicId: this.comic.comicId,
+                title: this.comic.title,
+                cover: this.comic.cover,
+                description: this.comic.description,
+                firstLetter: this.comic.firstLetter,
+                direction: new Number(this.comic.direction),
+                flag: new Number(this.comic.flag),
+                categoryIds: this.comic.categoryIds,
+                categories: this.comic.categories,
+                authorIds: this.comic.authorIds,
+                authors: this.comic.authors,
+                regionId: this.comic.regionId,
+                region: this.comic.region,
+                chapterNum: new Number(this.comic.chapterNum),
+                startTime: this.comic.startTime,
+                endTime: this.comic.endTime,
+                subscribeNum: new Number(this.comic.subscribeNum),
+                hitNum: new Number(this.comic.hitNum),
+                status: new Number(this.comic.status),
+            };
+            (data.comicId != 0 ? updateComic(data) : saveComic(data)).then(res => {
+                console.log(res);
+                TableHelper.doRefresh('#table');
+                $('#editModal').modal('hide');
+            });
+
+        },
+        del(obj) {
+            const index = $(obj).data('index');
+            const record = TableHelper.getData('#table')[index];
+            const comicId = record.comicId;
+            if (!confirm('是否确定要删除？')) {
+                return;
+            }
+            delComic(comicId).then(res => {
+                console.log(res);
+                TableHelper.doRefresh('#table');
             });
         },
     },
