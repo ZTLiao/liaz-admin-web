@@ -60,6 +60,15 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="flag" class="col-sm-3 control-label">漫画标记:</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" name="flag" value="1" @change="check"/>{{ (comic.flag & 0b1) != 0 ? '连载' : '完结' }}<br>
+                                <input type="checkbox" name="flag" value="2" @change="check"/>{{ (comic.flag & 0b10) != 0 ? '隐藏' : '显示' }}<br>
+                                <input type="checkbox" name="flag" value="4" @change="check"/>{{ (comic.flag & 0b100) != 0 ? '升序' : '降序' }}<br>
+                                <input type="checkbox" name="flag" value="8" @change="check"/>{{ (comic.flag & 0b1000) != 0 ? '条漫' : '页漫' }}<br>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="description" class="col-sm-3 control-label">描述:</label>
                             <div class="col-sm-8">
                                 <textarea class="form-control" name="description" id="description" v-model="comic.description">
@@ -359,6 +368,11 @@ export default {
             this.show();
         },
         show() {
+            let flag = this.comic.flag;
+            $("input:checkbox[name='flag']")[0].checked = ((flag & 0b1) != 0);
+            $("input:checkbox[name='flag']")[1].checked = ((flag & 0b10) != 0);
+            $("input:checkbox[name='flag']")[2].checked = ((flag & 0b100) != 0);
+            $("input:checkbox[name='flag']")[3].checked = ((flag & 0b1000) != 0);
             $('#editModal').modal('show');
         },
         save() {
@@ -388,7 +402,6 @@ export default {
                 TableHelper.doRefresh('#table');
                 $('#editModal').modal('hide');
             });
-
         },
         del(obj) {
             const index = $(obj).data('index');
@@ -401,6 +414,14 @@ export default {
                 console.log(res);
                 TableHelper.doRefresh('#table');
             });
+        },
+        check() {
+            const flagArray = $("input:checkbox[name='flag']:checked").serializeArray();
+            let flag = 0;
+            for (let i = 0, len = flagArray.length; i < len; i++) {
+                flag |= flagArray[i].value;
+            }
+            this.comic.flag = flag;
         },
     },
 }
