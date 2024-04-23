@@ -18,17 +18,205 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="modalLabel">小说信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" name="novelId" v-model="novel.novelId"/>
+                        <div class="form-group">
+                            <label for="firstLetter" class="col-sm-3 control-label">首字母:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control validate[required]" name="firstLetter" id="firstLetter"
+                                    v-model="novel.firstLetter" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="title" class="col-sm-3 control-label">小说名称:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control validate[required]" name="title" id="title"
+                                    v-model="novel.title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">封面</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" class="form-control" name="cover" v-model="novel.cover" />
+                                <img :src="imgFormatter(novel.cover)" style="width:120px;"/>
+                                <input type="file" class="form-control" id="file" name="file">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-8">
+                                <button class="btn btn-success col-sm-4" type="button" id="uploadBtn">上传</button>
+                                <span class="btn col-sm-4" id="uploadInfo" style="color:red;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="flag" class="col-sm-3 control-label">小说标记:</label>
+                            <div class="col-sm-8">
+                                <input type="checkbox" name="flag" value="1" @change="check"/>{{ (novel.flag & 0b1) != 0 ? '连载' : '完结' }}<br>
+                                <input type="checkbox" name="flag" value="2" @change="check"/>{{ (novel.flag & 0b10) != 0 ? '隐藏' : '显示' }}<br>
+                                <input type="checkbox" name="flag" value="4" @change="check"/>{{ (novel.flag & 0b100) != 0 ? '升序' : '降序' }}<br>
+                                <input type="checkbox" name="flag" value="8" @change="check"/>{{ (novel.flag & 0b1000) != 0 ? '条漫' : '页漫' }}<br>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="col-sm-3 control-label">描述:</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" name="description" id="description" v-model="novel.description">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="direction" class="col-sm-3 control-label">阅读方向:</label>
+                            <div class="col-sm-8">
+                                <select name="direction" id="direction" data-btn-class="btn-warning" v-model="novel.direction">
+                                    <option value="0">左右</option>
+                                    <option value="1">上下</option>
+                                    <option value="2">右左</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="col-sm-3 control-label">状态:</label>
+                            <div class="col-sm-8">
+                                <select name="status" id="status" data-btn-class="btn-warning" v-model="novel.status">
+                                    <option value="1">有效</option>
+                                    <option value="0">无效</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
   
 <script>
 import TableHelper from '@/utils/bootstrap-table-helper';
-import { getNovelPage } from '@/api/asset/novel';
+import { uploadFile } from '@/api/common/upload';
+import { getNovelPage, saveNovel, updateNovel, delNovel } from '@/api/asset/novel';
+import { getFileUrl } from '@/utils/system-helper';
+import global from '@/constants/global';
 
 export default {
     name: 'NovelView',
+    setup() {
+        function showText(obj) {
+            let text = unescape($(obj).prop('title'));
+            let $div = $("#tipMsg"); 
+            $div.attr('style', 'word-wrap: break-word;');
+            $div.text(text);
+            $("#tipModal").modal('show');
+        }
+        window.showText = showText;
+        return {
+            showText
+        };
+    },
     data() {
         return {
             columns: [
+                { field: 'novelId', title: '小说ID', align: 'center', width: '5%' },
+                { field: 'firstLetter', title: '首字母', align: 'center', width: '5%' },
+                { field: 'title', title: '小说名称', align: 'center', width: '5%' },
+                {
+                    field: 'cover',
+                    title: '小说封面',
+                    align: 'center',
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        let value = getFileUrl(val);
+                        return '<img src="' + value + '" width="70" height="60"/>';
+                    }
+                },
+                { field: 'authors', title: '小说作者', align: 'center', width: '5%' },
+                { field: 'region', title: '小说地区', align: 'center', width: '5%' },
+                { 
+                    field: 'description', 
+                    title: '小说简介', 
+                    align: 'center', 
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        return '<div style="text-align: center; width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + escape(val) + '" onclick="showText(this);">' + val + '</div>';
+                    }
+                },
+                { 
+                    field: 'direction', 
+                    title: '阅读方向', 
+                    align: 'center', 
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        let value = '';
+                        if (val == 0) {
+                            value = '左右';
+                        } else if (val == 1) {
+                            value = '上下';
+                        } else if (val == 2) {
+                            value = '右左';
+                        }
+                        return value;
+                    } 
+                },
+                { 
+                    field: 'flag', 
+                    title: '小说标记', 
+                    align: 'center', 
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        const serializated = 0b1;
+                        const hide = 0b10;
+                        const sort = 0b100;
+                        let value = '';
+                        if ((val & serializated) != 0) {
+                            value += '连载';
+                        } else {
+                            value += '完结';
+                        }
+                        value += ' ';
+                        if ((val & hide) != 0) {
+                            value += '隐藏';
+                        } else {
+                            value += '显示';
+                        }
+                        value += ' ';
+                        if ((val & sort) != 0) {
+                            value += '升序';
+                        } else {
+                            value += '降序';
+                        }
+                        value += ' ';
+                        return value;
+                    } 
+                },
+                { field: 'categories', title: '漫画分类', align: 'center', width: '5%' },
+                { field: 'startTime', title: '连载时间', align: 'center', width: '5%' },
+                { field: 'endTime', title: '更新时间', align: 'center', width: '5%' },
+                { field: 'chapterNum', title: '章节数', align: 'center', width: '5%' },
+                { field: 'subscribeNum', title: '订阅数', align: 'center', width: '5%' },
+                { field: 'hitNum', title: '点击数', align: 'center', width: '5%' },
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    width: '5%',
+                    formatter: function (val, row, index) {
+                        return val ? '有效' : '无效';
+                    }
+                },
                 {
                     field: 'createdAt',
                     title: '创建时间',
@@ -51,17 +239,69 @@ export default {
                         return dateTime.toLocaleString();
                     }
                 },
+                {
+                    field: 'novelId',
+                    title: '操作',
+                    align: 'center',
+                    width: '20%',
+                    formatter: function (val, row, index) {
+                        let value = '<button class="btn btn-sm btn-success opt-edit" data-id="' + val + '" data-index="' + index + '">编辑</button>';
+                        value += '<button class="btn btn-sm btn-danger opt-del" data-id="' + val + '" data-index="' + index + '">删除</button>';
+                        return value;
+                    }
+                },
             ],
+            novel: {
+                novelId: 0,
+                title: '',
+                cover: '',
+                description: '',
+                firstLetter: '',
+                direction: 0,
+                flag: 0,
+                categoryIds: '',
+                categories: '',
+                authorIds: '',
+                authors: '',
+                regionId: 0,
+                region: '',
+                chapterNum: 0,
+                startTime: '',
+                endTime: '',
+                subscribeNum: 0,
+                hitNum: 0,
+                status: 0,
+            },
         };
     },
     created() {
         this.init();
     },
     methods: {
+        imgFormatter(path) {
+            return getFileUrl(path);
+        },
         init() {
             this.$nextTick(function () {
                 let $this = this;
                 $this.initTable();
+                $('#uploadBtn').click(function () {
+                    uploadFile({
+                        id: 'file',
+                        bucketName: global.BUCKET.COVER
+                    }).then(res => {
+                        $this.comic.cover = res.data.path;
+                    });
+                });
+                $('#table').on('click', '.opt-edit', function () {
+                    $this.edit(this);
+                });
+                $('#table').on('click', '.opt-del', function () {
+                    $this.del(this);
+                });
+                $('#save').click(function () {
+                    $this.save();
+                });
             });
         },
         initTable() {
@@ -96,6 +336,86 @@ export default {
                 },
                 toolbar: '#toolbar',
             });
+        },
+        edit(obj) {
+            const index = $(obj).data('index');
+            const record = TableHelper.getData('#table')[index];
+            this.novel.novelId = record.comicId;
+            this.novel.title = record.title;
+            this.novel.cover = record.cover;
+            this.novel.description = record.description;
+            this.novel.firstLetter = record.firstLetter;
+            this.novel.direction = record.direction;
+            this.novel.flag = record.flag;
+            this.novel.categoryIds = record.categoryIds;
+            this.novel.categories = record.categories;
+            this.novel.authorIds = record.authorIds;
+            this.novel.authors = record.authors;
+            this.novel.regionId = record.regionId;
+            this.novel.region = record.region;
+            this.novel.chapterNum = record.chapterNum;
+            this.novel.startTime = record.startTime;
+            this.novel.endTime = record.endTime;
+            this.novel.subscribeNum = record.subscribeNum;
+            this.novel.hitNum = record.hitNum;
+            this.novel.status = record.status;
+            this.show();
+        },
+        show() {
+            let flag = this.novel.flag;
+            $("input:checkbox[name='flag']")[0].checked = ((flag & 0b1) != 0);
+            $("input:checkbox[name='flag']")[1].checked = ((flag & 0b10) != 0);
+            $("input:checkbox[name='flag']")[2].checked = ((flag & 0b100) != 0);
+            $("input:checkbox[name='flag']")[3].checked = ((flag & 0b1000) != 0);
+            $('#editModal').modal('show');
+        },
+        save() {
+            let data = {
+                novelId: this.novel.novelId,
+                title: this.novel.title,
+                cover: this.novel.cover,
+                description: this.novel.description,
+                firstLetter: this.novel.firstLetter,
+                direction: new Number(this.novel.direction),
+                flag: new Number(this.novel.flag),
+                categoryIds: this.novel.categoryIds,
+                categories: this.novel.categories,
+                authorIds: this.novel.authorIds,
+                authors: this.novel.authors,
+                regionId: this.novel.regionId,
+                region: this.novel.region,
+                chapterNum: new Number(this.novel.chapterNum),
+                startTime: this.novel.startTime,
+                endTime: this.novel.endTime,
+                subscribeNum: new Number(this.novel.subscribeNum),
+                hitNum: new Number(this.novel.hitNum),
+                status: new Number(this.novel.status),
+            };
+            (data.novelId != 0 ? updateNovel(data) : saveNovel(data)).then(res => {
+                console.log(res);
+                TableHelper.doRefresh('#table');
+                $('#editModal').modal('hide');
+            });
+        },
+        del(obj) {
+            const index = $(obj).data('index');
+            const record = TableHelper.getData('#table')[index];
+            const novelId = record.novelId;
+            if (!confirm('是否确定要删除？')) {
+                return;
+            }
+            delNovel(novelId).then(res => {
+                console.log(res);
+                TableHelper.doRefresh('#table');
+            });
+        },
+        check() {
+            const flagArray = $("input:checkbox[name='flag']:checked").serializeArray();
+            let flag = 0;
+            for (let i = 0, len = flagArray.length; i < len; i++) {
+                flag |= flagArray[i].value;
+            }
+            this.novel.flag = flag;
         },
     },
 }

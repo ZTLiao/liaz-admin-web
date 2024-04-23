@@ -88,7 +88,7 @@
                         <div class="form-group">
                             <label for="status" class="col-sm-3 control-label">状态:</label>
                             <div class="col-sm-8">
-                                <select name="status" id="status" data-btn-class="btn-warning">
+                                <select name="status" id="status" data-btn-class="btn-warning" v-model="comic.status">
                                     <option value="1">有效</option>
                                     <option value="0">无效</option>
                                 </select>
@@ -182,25 +182,25 @@ export default {
                         const sort = 0b100;
                         const long = 0b1000;
                         let value = '';
-                        if (val & serializated != 0) {
+                        if ((val & serializated) != 0) {
                             value += '连载';
                         } else {
                             value += '完结';
                         }
                         value += ' ';
-                        if (val & hide != 0) {
+                        if ((val & hide) != 0) {
                             value += '隐藏';
                         } else {
                             value += '显示';
                         }
                         value += ' ';
-                        if (val & sort != 0) {
+                        if ((val & sort) != 0) {
                             value += '升序';
                         } else {
                             value += '降序';
                         }
                         value += ' ';
-                        if (val & long != 0) {
+                        if ((val & long) != 0) {
                             value += '条漫';
                         } else {
                             value += '页漫';
