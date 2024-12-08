@@ -38,6 +38,8 @@ import { setStore } from '@/utils/store';
 import { login } from '@/api/system/login';
 import global from '@/constants/global';
 
+const AES = require('@/utils/aes.js');
+
 export default {
     name: "LoginView",
     created() {
@@ -71,6 +73,9 @@ export default {
                 $(".loginTips").html("密码不能为空！");
                 return;
             }
+            const encryptText = AES['AES']['encrypt']('测试AES加密12456', 'RvQ2V6D8khhI7ReR', '5245847584125485');
+            console.log('encryptText : ', encryptText);
+            console.log(AES['AES']['decrypt'](encryptText, 'RvQ2V6D8khhI7ReR', '5245847584125485'));        
             login({
                 'username': username,
                 'password': $.md5(password),

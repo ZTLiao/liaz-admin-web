@@ -8,7 +8,7 @@ const service = axios.create();
 
 service.defaults.baseURL = !process.env.VUE_APP_DEBUG_MODE ? process.env.VUE_APP_API_BASE_URL : '';
 
-service.interceptors.request.use(config => {
+service.interceptors.request.use(config => { 
     if (global.EXCLUDES.filter(v => config.url == v).length == 0) {
         config.headers[global.AUTHORIZATION] = getStore({ name: 'access_token' });
     }
